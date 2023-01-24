@@ -1,0 +1,93 @@
+const mongodb = require("../db/connect");
+const ObjectId = require("mongodb").ObjectId;
+
+const returnAllContacts = async (req, res) => {
+  try {
+    const response = await mongodb
+      .getDb()
+      .db("CSE341DB1")
+      .collection("Contacts")
+      .find();
+    response.toArray().then((lists) => {
+      res.setHeader("Content-Type", "application/json");
+      res.status(200).json(lists);
+    });
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
+const findContactById = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  if (!userId) {
+    res.status(400);
+    return;
+  }
+  try {
+    const response = await mongodb
+      .getDb()
+      .db("CSE341DB1")
+      .collection("Contacts")
+      .find({ _id: userId });
+    response.toArray().then((lists) => {
+      res.setHeader("Content-Type", "application/json");
+      res.status(200).json(lists[0]);
+    });
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
+const createContact = async (req, res) => {
+  try {
+    const response = await mongodb
+      .getDb()
+      .db("CSE341DB1")
+      .collection("Contacts")
+      .insertOne(req.body);
+    res.status(201).json(response);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
+const updateContact = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  const contact = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    favColor: req.body.favColor,
+    birthday: req.body.birthday
+  };
+  try{
+    const response = await mongodb
+      .getDb()
+      .db("CSE341DB1")
+      .collection("Contacts")
+      .replaceOne({ _id: userId }, contact);
+    res.status(204).send(response);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
+const deleteContact = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  if (!userId) {
+    res.status(400);
+    return;
+  }
+  try{
+    const response = await mongodb
+      .getDb()
+      .db("CSE341DB1")
+      .collection("Contacts")
+      .remove({ _id: userId }, true);
+    res.status(200).json(response);
+  } catch (e) {
+    res.status(500).send(e)
+  }
+};
+
+  module.exports = { returnAllContacts, findContactById, createContact, updateContact, deleteContact };
