@@ -5,13 +5,14 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "swagger": "node ./swagger.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nathanbirch/cse341-apiCourse-code.git"
   },
-  "author": "Nathan Birch",
+  "author": "Keith Mair",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/nathanbirch/cse341-apiCourse-code/issues"

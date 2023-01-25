@@ -39,12 +39,19 @@ const findContactById = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
+  const contact = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    favColor: req.body.favColor,
+    birthday: req.body.birthday
+  };
   try {
     const response = await mongodb
       .getDb()
       .db("CSE341DB1")
       .collection("Contacts")
-      .insertOne(req.body);
+      .insertOne(contact);
     res.status(201).json(response);
   } catch (e) {
     res.status(500).send(e);
@@ -83,7 +90,7 @@ const deleteContact = async (req, res) => {
       .getDb()
       .db("CSE341DB1")
       .collection("Contacts")
-      .remove({ _id: userId }, true);
+      .deleteOne({ _id: userId }, true);
     res.status(200).json(response);
   } catch (e) {
     res.status(500).send(e)
